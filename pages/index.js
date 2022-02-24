@@ -1,13 +1,13 @@
 import Head from "next/head"
 
-import { category, movieType, tvType } from "../lib/api/tmdbApi"
+import tmdbApi, { category, movieType, tvType } from "../lib/api/tmdbApi"
 
 import HeroSlide from "../components/HeroSlide"
 import { OutlineButton } from "../components/Button"
 import { useRouter } from "next/router"
 import MovieList from "../components/MoviList"
 
-export default function Home() {
+export default function Home({ slider_movies }) {
    const router = useRouter()
 
    return (
@@ -18,7 +18,7 @@ export default function Home() {
 
          <div>
             <section>
-               <HeroSlide />
+               <HeroSlide movieItems={slider_movies} />
             </section>
 
             <div className="container">
@@ -73,4 +73,18 @@ export default function Home() {
          </div>
       </>
    )
+}
+
+export async function getStaticProps() {
+   const params = { page: 1 }
+
+   const response = await tmdbApi.getMovieList(movieType.popular, { params })
+
+   return {
+      props: {
+         slider_movies: response.results.slice(1, 4),
+      },
+
+      revalidate: 50,
+   }
 }

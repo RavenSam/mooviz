@@ -10,24 +10,15 @@ import tmdbApi from "../../lib/api/tmdbApi"
 
 import styles from "../../styles/Detail.module.scss"
 
-export default function Detail() {
-   const [item, setItem] = useState(null)
+export default function Detail({ item }) {
    const router = useRouter()
 
    const cat = router?.query?.id && router?.query?.id[0]
    const id = router?.query?.id && router?.query?.id[1]
 
-   useEffect(() => {
-      const getDetail = async () => {
-         if (id) {
-            const response = await tmdbApi.details(cat, id, { params: {} })
-            setItem(response)
-            window.scrollTo(0, 0)
-         }
-      }
-
-      getDetail()
-   }, [cat, id])
+   if (router.isFallback) {
+      return <div>Loading...</div>
+   }
 
    return (
       <>
@@ -93,4 +84,25 @@ export default function Detail() {
          )}
       </>
    )
+}
+
+export async function getStaticProps({ params }) {
+   const cat = params?.id[0]
+   const id = params?.id[1]
+   const response = await tmdbApi.details(cat, id, { params: {} })
+
+   return {
+      props: {
+         item: response,
+      },
+
+      revalidate: 50,
+   }
+}
+
+export async function getStaticPaths() {
+   return {
+      paths: [],
+      fallback: "blocking",
+   }
 }

@@ -11,24 +11,8 @@ import Modal, { ModalContent } from "../Modal"
 
 import styles from "./HeroSlide.module.scss"
 
-export default function HeroSlide() {
-   const [movieItems, setMovieItems] = useState([])
-
+export default function HeroSlide({ movieItems }) {
    SwiperCore.use([Autoplay])
-
-   useEffect(() => {
-      const getMovies = async () => {
-         const params = { page: 1 }
-         try {
-            const response = await tmdbApi.getMovieList(movieType.popular, { params })
-            setMovieItems(response.results.slice(1, 4))
-         } catch (err) {
-            console.log({ err, mg: "heroSlide error" })
-         }
-      }
-
-      getMovies()
-   }, [])
 
    return (
       <div className={styles.heroSlide}>
