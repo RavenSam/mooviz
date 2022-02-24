@@ -1,0 +1,16 @@
+@use "../../styles/scss/" as *;
+
+.movieList {
+   .swiperSlide {
+      width: 15%;
+      min-height: 150px;
+
+      @include tablet {
+         width: 30%;
+      }
+
+      @include mobile {
+         width: 40%;
+      }
+   }
+}
